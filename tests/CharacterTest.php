@@ -22,7 +22,7 @@ class CharacterTest extends TestCase {
 		$this->assertEquals(1000,$pikachuHealth);
 	}
 
-	
+
 	public function test_character_level_starting_at_one()
 	{
 			//given
@@ -35,26 +35,61 @@ class CharacterTest extends TestCase {
 			$this->assertEquals(1,$gokuLevel);
 			$this->assertEquals(1,$pikachuLevel);
 	}
+
 	public function test_character_is_alive_or_dead()
 	{
 			//given
 			$goku = new Character;
 			$pikachu = new Character;
 			//when
-			$gokuLive = $goku->getLive();
-			$pikachuLive = $pikachu->getLive();
+			$gokuLive = $goku->isAlive();
+			$pikachuLive = $pikachu->isAlive();
 			//then
 			$this->assertEquals(true,$gokuLive);
 			$this->assertEquals(true,$pikachuLive);
 	}
-	public function test_damage_recived()
+	public function test_Character_takes_damage()
 	{
 			//given
-			$goku = new Character;
+			$merida = new Character;
+			$harley= new Character;
 			//when
-			$gokuDamageRecived = $goku->getDamageRecived();
-			//then
-			$this->assertEquals(true,$gokuDamageRecived);
+			$merida->attack($harley,200);
+			$result = $harley->getHealth();
+			$this->assertEquals(800, $result);
+	}
+	public function test_when_character_health_equals_0_he_died()
+	{
+		$merida = new Character;
+		$harley= new Character;
+
+		$merida->attack($harley,1000);
+		$result = $harley->getHealth();
+		$this->assertEquals(0,$result);
+		$this->assertEquals(false,$harley->isAlive());
+		
+	}
+
+	public function test_character_can_heal_another_character()
+	{
+		$merida = new Character;
+		$harley= new Character;
+        $harley->setHealth(800);
+		
+		$merida->heal($harley,200);
+		$this->assertEquals(1000,$harley->getHealth());
+		
+	}
+	public function test_character_dead_cant_be_healed()
+	{
+		$merida = new Character;
+		$harley= new Character;
+        $harley->setHealth(0);
+		
+		$merida->heal($harley,200);
+		$this->assertEquals(false,$harley->isAlive());
+		$this->assertEquals(0,$harley->getHealth());
+		$this->assertEquals(false,$harley->isAlive());
 	}
 
 }
